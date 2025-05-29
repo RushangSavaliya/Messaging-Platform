@@ -1,0 +1,22 @@
+{
+  "name": "messaging-platform",
+  "version": "1.0.0",
+  "description": "High-performance backend for real-time messaging and user management",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RushangSavaliya/Messaging-Platform.git"
+  },
+  "author": "Rushang Savaliya",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
