@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "High-performance backend for real-time messaging and user management",
   "main": "app.js",
+  "type": "module",
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js"
@@ -14,10 +15,12 @@
   "author": "Rushang Savaliya",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.5.0",
     "express": "^5.1.0",
     "mongoose": "^8.15.1"
   },
   "devDependencies": {
+    "@types/express": "^5.0.2",
     "nodemon": "^3.1.10"
   }
 }
