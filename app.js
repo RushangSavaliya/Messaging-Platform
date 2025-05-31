@@ -1,40 +1,45 @@
 // app.js
 
-// Import required modules
+// ────────────────────────────────────────────────────────────────
+// 1. IMPORTS
+// ────────────────────────────────────────────────────────────────
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-// Load environment variables from .env file
+// ────────────────────────────────────────────────────────────────
+// 2. CONFIGURATION
+// ────────────────────────────────────────────────────────────────
 dotenv.config();
-
-// Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 
-// Middleware to parse JSON bodies
-app.use(express.json());
+// ────────────────────────────────────────────────────────────────
+// 3. MIDDLEWARE
+// ────────────────────────────────────────────────────────────────
+app.use(express.json()); // Parses incoming JSON requests
 
-// Connect to MongoDB using Mongoose
+// ────────────────────────────────────────────────────────────────
+// 4. DATABASE CONNECTION
+// ────────────────────────────────────────────────────────────────
 mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(MONGO_URI, {})
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((error) => {
     console.error('❌ MongoDB connection failed:', error.message);
-    process.exit(1); // Exit process if DB connection fails
+    process.exit(1);
   });
 
-// Define User Schema with validation
+// ────────────────────────────────────────────────────────────────
+// 5. SCHEMA & MODEL
+// ────────────────────────────────────────────────────────────────
 const userSchema = new mongoose.Schema(
   {
     username: {
       type: String,
       required: [true, 'Username is required'],
-      unique: [true, 'Username already in use'],
+      unique: true,
       trim: true,
       minLength: [3, 'Username must be at least 3 characters'],
       maxLength: [20, 'Username must be at most 20 characters'],
@@ -42,9 +47,9 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, 'Email is required'],
-      unique: [true, 'Email already in use'],
+      unique: true,
       trim: true,
-      lowercase: [true, 'Email must be lowercase'],
+      lowercase: true,
       match: [/.+@.+\..+/, 'Please use a valid email address'],
     },
     password: {
@@ -61,45 +66,42 @@ const userSchema = new mongoose.Schema(
   { collection: 'users' }
 );
 
-// Create User model from schema
 const User = mongoose.model('User', userSchema);
 
-// Health check route
+// ────────────────────────────────────────────────────────────────
+// 6. ROUTES
+// ────────────────────────────────────────────────────────────────
+
+// Health Check
 app.get('/', (_, res) => {
   res.status(200).send('🚀 Messaging Platform API is live');
 });
 
-// User registration route
+// User Registration
 app.post('/api/auth/register', async (req, res) => {
   const { username, email, password } = req.body;
 
-  // Validate required fields
+  // Field validation
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'All fields are required' });
   }
 
   try {
     const user = new User({ username, email, password });
-
-    // Save user to database
     await user.save();
-
-    // Respond with success message
     res.status(201).json({ message: 'User registered successfully' });
   } catch (error) {
-    // Handle duplicate key error (username/email already exists)
     if (error.code === 11000) {
-      const duplicateField = Object.keys(error.keyPattern)[0];
-      return res
-        .status(400)
-        .json({ error: `${duplicateField} already in use` });
+      const field = Object.keys(error.keyPattern)[0];
+      return res.status(400).json({ error: `${field} already in use` });
     }
-    // Handle other errors
     return res.status(400).json({ error: error.message });
   }
 });
 
-// Start the server
+// ────────────────────────────────────────────────────────────────
+// 7. SERVER INIT
+// ────────────────────────────────────────────────────────────────
 app.listen(PORT, () => {
   console.log(`🔥 Server listening on port ${PORT}`);
 });
