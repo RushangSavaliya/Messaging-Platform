@@ -7,6 +7,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
 import authRoutes from './routes/auth.router.js';
+import setupMiddlewares from './middlewares/global.middleware.js';
 
 // ──────────────────────────────
 // 2. CONFIGURATION
@@ -20,7 +21,7 @@ const MONGO_URI = process.env.MONGO_URI;
 // ──────────────────────────────
 // 3. MIDDLEWARE
 // ──────────────────────────────
-app.use(express.json());
+setupMiddlewares(app);
 
 // ──────────────────────────────
 // 4. DATABASE CONNECTION
