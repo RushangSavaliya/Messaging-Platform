@@ -2,6 +2,8 @@
 
 import express from 'express';
 import User from '../models/User.js';
+import Session from '../models/Session.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
 
@@ -57,8 +59,16 @@ router.post('/login', async (req, res) => {
                 error: 'Invalid username or password',
             });
         }
+
+        // Generate unique session token
+        const token = uuidv4();
+
+        // Create and save session
+        await Session.create({ userId: user._id, token });
+
         return res.status(200).json({
             message: 'Login successful',
+            token,
         });
     } catch (error) {
         return res.status(500).json({
@@ -66,5 +76,34 @@ router.post('/login', async (req, res) => {
         });
     }
 });
+
+// Logout route
+router.post('/logout', async (req, res) => {
+    const { token } = req.body;
+
+    if (!token) {
+        return res.status(400).json({
+            error: 'Token is required',
+        });
+    }
+
+    try {
+        const session = await Session.findOneAndDelete({ token });
+        if (!session) {
+            return res.status(401).json({
+                error: 'Invalid session token',
+            });
+        }
+
+        return res.status(200).json({
+            message: 'Logout successful',
+        });
+    } catch (error) {
+        return res.status(500).json({
+            error: error.message,
+        });
+    }
+});
+
 
 export default router;

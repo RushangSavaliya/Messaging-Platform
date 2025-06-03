@@ -3,7 +3,7 @@
 import express from 'express';
 import cors from 'cors';
 // ──────────────────────────────
-// 1. GLOBAL MIDDLEWARES
+// 1. GLOBAL MIDDLEWARES    
 // ──────────────────────────────
 
 const setupMiddlewares = (app) => {
