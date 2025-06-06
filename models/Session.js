@@ -1,7 +1,5 @@
 // models/Session.js
 
-// TODO: use this
-
 import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
@@ -10,33 +8,28 @@ const sessionSchema = new Schema(
     {
         userId: {
             type: Schema.Types.ObjectId,
-            required: [true, 'User ID is required for session'],
             ref: 'User',
-        },
-        token: {
-            type: String,
-            required: [true, 'Session token is required'],
-            unique: true,
-            ref: 'User',
-        },
-        token: {
-            type: String,
-            required: [true, 'Session token is required'],
-            unique: true,
-            trim: true,
+            required: true,
         },
         createdAt: {
             type: Date,
             default: Date.now,
-            immutable: true,
+            immutable: true, // createdAt shouldn't change
+        },
+        lastUsedAt: {
+            type: Date,
+            default: Date.now,
+            index: true, // supports TTL index
         },
     },
     {
         collection: 'sessions',
-        timestamps: false,
+        timestamps: false, // handled manually with createdAt and lastUsedAt
     }
 );
 
+// TTL index: auto-remove session after 28 days of inactivity
+sessionSchema.index({ lastUsedAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 28 });
 
 const Session = model('Session', sessionSchema);
 
