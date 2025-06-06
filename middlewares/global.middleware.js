@@ -3,9 +3,9 @@
 import express from 'express';
 import cors from 'cors';
 
-// ──────────────────────────────
+// ──────────────────────────────────
 // Global Middlewares Setup
-// ──────────────────────────────
+// ──────────────────────────────────
 
 const setupMiddlewares = (app) => {
     app.use(express.json());

@@ -14,22 +14,23 @@ const sessionSchema = new Schema(
         createdAt: {
             type: Date,
             default: Date.now,
-            immutable: true, // createdAt shouldn't change
+            immutable: true,
         },
         lastUsedAt: {
             type: Date,
             default: Date.now,
-            index: true, // supports TTL index
         },
     },
     {
         collection: 'sessions',
-        timestamps: false, // handled manually with createdAt and lastUsedAt
     }
 );
 
-// TTL index: auto-remove session after 28 days of inactivity
-sessionSchema.index({ lastUsedAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 28 });
+// TTL Index: Auto-delete session after 28 days of inactivity
+sessionSchema.index(
+    { lastUsedAt: 1 },
+    { expireAfterSeconds: 60 * 60 * 24 * 28 }
+);
 
 const Session = model('Session', sessionSchema);
 

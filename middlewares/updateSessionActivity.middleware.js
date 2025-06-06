@@ -6,8 +6,8 @@ import Session from '../models/Session.js';
 // Update Session Activity Middleware
 // ──────────────────────────────
 
-const updateSessionActivity = async (req, res, next) => {
-    const token = req.headers.authorization || req.body.token || req.query.token;
+const updateSessionActivity = async (req, _res, next) => {
+    const token = req.body.token;
     if (!token) return next();
 
     try {

@@ -10,7 +10,7 @@ import updateSessionActivity from './middlewares/updateSessionActivity.middlewar
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
 
 setupMiddlewares(app);
