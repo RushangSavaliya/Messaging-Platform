@@ -26,10 +26,14 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
     const { usernameORemail, password } = req.body;
     try {
-        const user = await User.findOne({ $or: [{ username: usernameORemail }, { email: usernameORemail }] }); // Find user by username or email
+        const user = await User.findOne({
+            $or: [{ username: usernameORemail }, { email: usernameORemail }]
+        });
+
         if (!user || user.password !== password) {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
+
         const token = await createSession(user._id);
         res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
@@ -41,7 +45,13 @@ export const loginUser = async (req, res) => {
 // Logout User
 // ────────────────────────────────
 export const logoutUser = async (req, res) => {
-    const { token } = req.body;
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Authorization token missing or malformed' });
+    }
+
+    const token = authHeader.split(' ')[1];
+
     try {
         const session = await deleteSession(token);
         if (!session) {

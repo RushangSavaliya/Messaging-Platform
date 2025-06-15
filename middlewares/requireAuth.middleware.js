@@ -9,16 +9,19 @@ const requireAuth = async (req, res, next) => {
         return next();
     }
 
-    const token = req.body.token;
-    if (!token) {
-        return res.status(401).json({ error: 'You are not authenticated' });
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Authorization token missing or malformed' });
     }
+
+    const token = authHeader.split(' ')[1];
 
     try {
         const session = await findSessionById(token);
         if (!session) {
-            return res.status(401).json({ error: 'You are not authenticated' });
+            return res.status(401).json({ error: 'Invalid or expired session' });
         }
+
         req.session = session;
         next();
     } catch (err) {
