@@ -3,9 +3,10 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
-import authRoutes from './routes/auth.router.js';
 import setupMiddlewares from './middlewares/global.middleware.js';
-import updateSessionActivity from './middlewares/updateSessionActivity.middleware.js';
+import requireAuth from './middlewares/requireAuth.middleware.js';
+import authRoutes from './routes/auth.route.js';
+import initSocket from './sockets/initSocket.js';
 
 dotenv.config();
 
@@ -13,13 +14,19 @@ const app = express();
 const PORT = process.env.PORT;
 const MONGO_URI = process.env.MONGO_URI;
 
-setupMiddlewares(app);
-app.use(updateSessionActivity);
-
+// Connect to MongoDB
 await connectDB(MONGO_URI);
 
-app.use('/api/auth', authRoutes);
+// Setup global middlewares
+setupMiddlewares(app);
 
-app.listen(PORT, () => {
-  console.log(`🔥 Server listening on port ${PORT}`);
+// Setup routes
+app.use('/api/auth', requireAuth, authRoutes);
+
+// Start server
+const server = app.listen(PORT, () => {
+  console.log(`🔥 Server is running on port http://localhost:${PORT}`);
 });
+
+// Initialize Socket.IO
+initSocket(server);

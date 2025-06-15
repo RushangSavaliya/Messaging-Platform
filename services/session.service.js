@@ -3,6 +3,7 @@
 import Session from '../models/Session.js';
 
 export const createSession = async (userId) => {
+    
     const session = await Session.create({ userId });
     return session._id.toString();
 };
