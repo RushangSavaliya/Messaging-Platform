@@ -1,7 +1,7 @@
 // server.js
 
-import express from 'express';
 import dotenv from 'dotenv';
+import express from 'express';
 import connectDB from './config/db.js';
 import setupMiddlewares from './middlewares/global.middleware.js';
 import requireAuth from './middlewares/requireAuth.middleware.js';
@@ -21,7 +21,7 @@ await connectDB(MONGO_URI);
 setupMiddlewares(app);
 
 // Setup routes
-app.use('/api/auth', requireAuth, authRoutes);
+app.use('/api/auth', authRoutes);
 
 // Start server
 const server = app.listen(PORT, () => {
