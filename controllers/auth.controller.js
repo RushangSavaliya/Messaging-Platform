@@ -1,4 +1,4 @@
-// controllers/auth.controller.js
+// File: src/controllers/auth.controller.js
 
 import User from '../models/User.js';
 import { createSession, deleteSession } from '../services/session.service.js';
@@ -46,11 +46,7 @@ export const loginUser = async (req, res) => {
 // ────────────────────────────────
 export const logoutUser = async (req, res) => {
     const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        return res.status(401).json({ error: 'Authorization token missing or malformed' });
-    }
-
-    const token = authHeader.split(' ')[1];
+    const token = authHeader?.split(' ')[1];
 
     try {
         const session = await deleteSession(token);
@@ -58,6 +54,21 @@ export const logoutUser = async (req, res) => {
             return res.status(401).json({ error: 'Invalid session token' });
         }
         res.status(200).json({ message: 'Logout successful' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+};
+
+// ────────────────────────────────
+// Get Current Authenticated User
+// ────────────────────────────────
+export const getCurrentUser = async (req, res) => {
+    try {
+        const user = await User.findById(req.session.userId).select('_id username email');
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        res.status(200).json({ user });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }

@@ -1,14 +1,8 @@
-// middlewares/requireAuth.middleware.js
+// File: src/middlewares/requireAuth.middleware.js
 
 import { findSessionById } from '../services/session.service.js';
 
-const PUBLIC_ROUTES = ['/login', '/register'];
-
 const requireAuth = async (req, res, next) => {
-    if (PUBLIC_ROUTES.includes(req.path)) {
-        return next();
-    }
-
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Authorization token missing or malformed' });
