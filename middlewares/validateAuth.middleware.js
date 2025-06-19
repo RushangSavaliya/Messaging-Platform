@@ -1,5 +1,6 @@
-// middlewares/validateAuth.middleware.js
+// File: middlewares/validateAuth.middleware.js
 
+// Validate registration fields
 export const validateRegister = (req, res, next) => {
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
@@ -8,6 +9,7 @@ export const validateRegister = (req, res, next) => {
     next();
 };
 
+// Validate login fields
 export const validateLogin = (req, res, next) => {
     const { usernameORemail, password } = req.body;
     if (!usernameORemail || !password) {
@@ -16,6 +18,7 @@ export const validateLogin = (req, res, next) => {
     next();
 };
 
+// Validate logout authorization header
 export const validateLogout = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith('Bearer ')) {

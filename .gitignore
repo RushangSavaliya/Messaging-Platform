@@ -1,4 +1,4 @@
-# .gitignore
+# File: .gitignore
 
 node_modules/
 test.js

@@ -1,6 +1,8 @@
 // File: src/routes/auth.router.js
 
 import express from 'express';
+
+// Controllers
 import {
     getCurrentUser,
     loginUser,
@@ -8,16 +10,17 @@ import {
     registerUser
 } from '../controllers/auth.controller.js';
 
+// Middlewares
+import requireAuth from '../middlewares/requireAuth.middleware.js';
 import {
     validateLogin,
     validateLogout,
     validateRegister
 } from '../middlewares/validateAuth.middleware.js';
 
-import requireAuth from '../middlewares/requireAuth.middleware.js';
-
 const router = express.Router();
 
+// Auth Routes
 router.post('/register', validateRegister, registerUser);
 router.post('/login', validateLogin, loginUser);
 router.post('/logout', validateLogout, logoutUser);

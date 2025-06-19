@@ -1,4 +1,4 @@
-// models/Session.js
+// File: models/Session.js
 
 import mongoose from 'mongoose';
 

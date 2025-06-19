@@ -1,14 +1,11 @@
-// sockets/initSocket.js
+// File: sockets/initSocket.js
 
 import { Server } from 'socket.io';
 import handleConnection from './handleConnection.js';
 
 const initSocket = (server) => {
-
     const io = new Server(server, {
-        cors: {
-            origin: '*'
-        }
+        cors: { origin: '*' }
     });
 
     io.on('connection', handleConnection);

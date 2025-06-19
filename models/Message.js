@@ -1,4 +1,4 @@
-// models/Message.js
+// File: models/Message.js
 
 import mongoose from 'mongoose';
 
@@ -18,13 +18,13 @@ const messageSchema = new Schema(
         },
         content: {
             type: String,
-            required: [true, 'Message content is required'],
             trim: true,
+            required: [true, 'Message content is required'],
         },
     },
     {
-        collection: 'messages',
         timestamps: true, // adds createdAt and updatedAt
+        collection: 'messages',
     }
 );
 

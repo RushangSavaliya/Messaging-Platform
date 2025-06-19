@@ -1,17 +1,20 @@
-// middlewares/global.middleware.js
+// File: middlewares/global.middleware.js
 
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 
-// ──────────────────────────────────
-// Global Middlewares Setup
-// ──────────────────────────────────
+// ──────────────────────────────
+// Global Middleware Registration
+// ──────────────────────────────
 
 const setupMiddlewares = (app) => {
+    // Parse incoming JSON requests
     app.use(express.json());
-    app.use(cors()); // Enable CORS for all routes
 
-    // Add more global middlewares here
+    // Enable CORS for all routes
+    app.use(cors());
+
+    // Add additional global middlewares below
 };
 
 export default setupMiddlewares;

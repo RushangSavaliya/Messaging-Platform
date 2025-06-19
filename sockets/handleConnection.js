@@ -1,7 +1,7 @@
-// sockets/handleConnection.js
+// File: sockets/handleConnection.js
 
+import Session from '../models/Session.js';
 import { findSessionById } from '../services/session.service.js';
-import updateLastUsedAt from '../services/updateLastUsedAt.js';
 
 const handleConnection = async (socket) => {
     const token = socket.handshake.auth.token;
@@ -25,14 +25,12 @@ const handleConnection = async (socket) => {
     console.log(`✅ Socket authenticated: ${socket.id} (user: ${session.userId})`);
     socket.emit('authorized', 'Connection established');
 
-    await updateLastUsedAt(token);
-
     socket.on('disconnect', async () => {
         console.log(`⚠️ Disconnected: ${socket.id}`);
         try {
-            await updateLastUsedAt(token);
+            await Session.findByIdAndUpdate(token, { lastUsedAt: new Date() });
         } catch (err) {
-            console.error('Error updating last used at on disconnect:', err);
+            console.error('Error updating lastUsedAt:', err.message);
         }
     });
 };

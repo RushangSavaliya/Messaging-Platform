@@ -1,11 +1,6 @@
-// services/message.service.js
+// File: services/message.service.js
 
 import Message from '../models/Message.js';
-
-export const createMessage = async ({ sender, receiver, content }) => {
-    const message = new Message({ sender, receiver, content });
-    return await message.save();
-};
 
 export const getMessagesBetween = async (userA, userB) => {
     return await Message.find({
@@ -16,4 +11,9 @@ export const getMessagesBetween = async (userA, userB) => {
     })
         .sort({ createdAt: 1 })
         .lean();
+};
+
+export const createMessage = async ({ sender, receiver, content }) => {
+    const message = new Message({ sender, receiver, content });
+    return await message.save();
 };

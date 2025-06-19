@@ -4,6 +4,7 @@ import { findSessionById } from '../services/session.service.js';
 
 const requireAuth = async (req, res, next) => {
     const authHeader = req.headers.authorization;
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ error: 'Authorization token missing or malformed' });
     }
@@ -12,13 +13,14 @@ const requireAuth = async (req, res, next) => {
 
     try {
         const session = await findSessionById(token);
+
         if (!session) {
             return res.status(401).json({ error: 'Invalid or expired session' });
         }
 
         req.session = session;
-        next();
-    } catch (err) {
+        return next();
+    } catch (error) {
         return res.status(500).json({ error: 'Internal server error' });
     }
 };

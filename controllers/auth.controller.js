@@ -10,13 +10,13 @@ export const registerUser = async (req, res) => {
     const { username, email, password } = req.body;
     try {
         await User.create({ username, email, password });
-        res.status(201).json({ message: 'User registered successfully' });
+        return res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
         if (error.code === 11000) {
             const field = Object.keys(error.keyPattern)[0];
             return res.status(409).json({ error: `${field} already exists` });
         }
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -35,9 +35,9 @@ export const loginUser = async (req, res) => {
         }
 
         const token = await createSession(user._id);
-        res.status(200).json({ message: 'Login successful', token });
+        return res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -53,9 +53,9 @@ export const logoutUser = async (req, res) => {
         if (!session) {
             return res.status(401).json({ error: 'Invalid session token' });
         }
-        res.status(200).json({ message: 'Logout successful' });
+        return res.status(200).json({ message: 'Logout successful' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };
 
@@ -68,8 +68,8 @@ export const getCurrentUser = async (req, res) => {
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
-        res.status(200).json({ user });
+        return res.status(200).json({ user });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: error.message });
     }
 };

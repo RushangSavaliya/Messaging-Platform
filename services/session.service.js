@@ -1,6 +1,10 @@
-// services/session.service.js
+// File: services/session.service.js
 
 import Session from '../models/Session.js';
+
+export const findSessionById = async (token) => {
+    return await Session.findById(token);
+};
 
 export const createSession = async (userId) => {
     const session = await Session.create({ userId });
@@ -9,8 +13,4 @@ export const createSession = async (userId) => {
 
 export const deleteSession = async (token) => {
     return await Session.findByIdAndDelete(token);
-};
-
-export const findSessionById = async (token) => {
-    return await Session.findById(token);
 };
