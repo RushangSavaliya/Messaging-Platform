@@ -8,15 +8,16 @@ import { createSession, deleteSession } from '../services/session.service.js';
 // ────────────────────────────────
 export const registerUser = async (req, res) => {
     const { username, email, password } = req.body;
+
     try {
         await User.create({ username, email, password });
         return res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        if (error.code === 11000) {
+        if (error.code === 11000 && error.keyPattern) {
             const field = Object.keys(error.keyPattern)[0];
             return res.status(409).json({ error: `${field} already exists` });
         }
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: 'Registration failed: ' + error.message });
     }
 };
 
@@ -25,6 +26,7 @@ export const registerUser = async (req, res) => {
 // ────────────────────────────────
 export const loginUser = async (req, res) => {
     const { usernameORemail, password } = req.body;
+
     try {
         const user = await User.findOne({
             $or: [{ username: usernameORemail }, { email: usernameORemail }]
@@ -37,25 +39,22 @@ export const loginUser = async (req, res) => {
         const token = await createSession(user._id);
         return res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: 'Login failed: ' + error.message });
     }
 };
 
 // ────────────────────────────────
-// Logout User
+// Logout User (requiresAuth already runs before this)
 // ────────────────────────────────
 export const logoutUser = async (req, res) => {
-    const authHeader = req.headers.authorization;
-    const token = authHeader?.split(' ')[1];
-
     try {
-        const session = await deleteSession(token);
+        const session = await deleteSession(req.session._id); // ← Use session from middleware
         if (!session) {
-            return res.status(401).json({ error: 'Invalid session token' });
+            return res.status(401).json({ error: 'Invalid session or already logged out' });
         }
         return res.status(200).json({ message: 'Logout successful' });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: 'Logout failed: ' + error.message });
     }
 };
 
@@ -70,6 +69,6 @@ export const getCurrentUser = async (req, res) => {
         }
         return res.status(200).json({ user });
     } catch (error) {
-        return res.status(500).json({ error: error.message });
+        return res.status(500).json({ error: 'Failed to fetch user: ' + error.message });
     }
 };

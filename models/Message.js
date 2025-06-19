@@ -9,21 +9,23 @@ const messageSchema = new Schema(
         sender: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: true,
+            required: [true, 'Sender ID is required'],
         },
         receiver: {
             type: Schema.Types.ObjectId,
             ref: 'User',
-            required: true,
+            required: [true, 'Receiver ID is required'],
         },
         content: {
             type: String,
             trim: true,
             required: [true, 'Message content is required'],
+            minlength: [1, 'Message must contain at least 1 character'],
+            maxlength: [1000, 'Message must be under 1000 characters'],
         },
     },
     {
-        timestamps: true, // adds createdAt and updatedAt
+        timestamps: true,
         collection: 'messages',
     }
 );

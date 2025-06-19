@@ -9,7 +9,7 @@ import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import initSocket from './sockets/initSocket.js';
 
-// Load environment variables
+// Load environment variables .env file
 dotenv.config();
 
 const PORT = process.env.PORT;

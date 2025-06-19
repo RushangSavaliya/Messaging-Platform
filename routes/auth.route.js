@@ -14,7 +14,6 @@ import {
 import requireAuth from '../middlewares/requireAuth.middleware.js';
 import {
     validateLogin,
-    validateLogout,
     validateRegister
 } from '../middlewares/validateAuth.middleware.js';
 
@@ -23,7 +22,7 @@ const router = express.Router();
 // Auth Routes
 router.post('/register', validateRegister, registerUser);
 router.post('/login', validateLogin, loginUser);
-router.post('/logout', validateLogout, logoutUser);
+router.post('/logout', logoutUser);
 router.get('/me', requireAuth, getCurrentUser);
 
 export default router;

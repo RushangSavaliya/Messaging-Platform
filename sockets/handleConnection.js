@@ -3,6 +3,9 @@
 import Session from '../models/Session.js';
 import { findSessionById } from '../services/session.service.js';
 
+// 🔗 Global in-memory map: userId → socketId
+export const activeUsers = new Map();
+
 const handleConnection = async (socket) => {
     const token = socket.handshake.auth.token;
 
@@ -22,11 +25,18 @@ const handleConnection = async (socket) => {
         return;
     }
 
-    console.log(`✅ Socket authenticated: ${socket.id} (user: ${session.userId})`);
+    const userId = session.userId.toString();
+
+    // 🧠 Store user socket
+    activeUsers.set(userId, socket.id);
+
+    console.log(`✅ Socket authenticated: ${socket.id} (user: ${userId})`);
     socket.emit('authorized', 'Connection established');
 
+    // 🧹 Handle disconnect
     socket.on('disconnect', async () => {
         console.log(`⚠️ Disconnected: ${socket.id}`);
+        activeUsers.delete(userId); // clean up
         try {
             await Session.findByIdAndUpdate(token, { lastUsedAt: new Date() });
         } catch (err) {

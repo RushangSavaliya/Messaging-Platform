@@ -3,14 +3,16 @@
 import { Server } from 'socket.io';
 import handleConnection from './handleConnection.js';
 
+let ioInstance = null;
+
 const initSocket = (server) => {
-    const io = new Server(server, {
-        cors: { origin: '*' }
+    ioInstance = new Server(server, {
+        cors: { origin: '*' },
     });
 
-    io.on('connection', handleConnection);
-
-    return io;
+    ioInstance.on('connection', handleConnection);
 };
+
+export const getIO = () => ioInstance; // 👈 allow controllers to access io
 
 export default initSocket;
