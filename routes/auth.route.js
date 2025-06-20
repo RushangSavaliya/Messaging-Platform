@@ -1,4 +1,4 @@
-// File: src/routes/auth.router.js
+// File: routes/auth.route.js
 
 import express from 'express';
 
@@ -22,7 +22,7 @@ const router = express.Router();
 // Auth Routes
 router.post('/register', validateRegister, registerUser);
 router.post('/login', validateLogin, loginUser);
-router.post('/logout', logoutUser);
+router.post('/logout', requireAuth, logoutUser);
 router.get('/me', requireAuth, getCurrentUser);
 
 export default router;

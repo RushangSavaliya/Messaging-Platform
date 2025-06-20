@@ -1,4 +1,4 @@
-// File: src/routes/message.route.js
+// File: routes/message.route.js
 
 import express from 'express';
 import { getMessages, sendMessage } from '../controllers/message.controller.js';

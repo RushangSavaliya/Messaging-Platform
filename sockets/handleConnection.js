@@ -1,10 +1,20 @@
 // File: sockets/handleConnection.js
 
 import Session from '../models/Session.js';
+import User from '../models/User.js';
 import { findSessionById } from '../services/session.service.js';
+import { getIO } from './initSocket.js';
 
 // 🔗 Global in-memory map: userId → socketId
 export const activeUsers = new Map();
+
+const broadcastActiveUsers = async () => {
+    const userIds = Array.from(activeUsers.keys());
+
+    const users = await User.find({ _id: { $in: userIds } }).select('_id username');
+    const io = getIO();
+    io.emit('active-users', users); // 🚀 Emit updated list to all
+};
 
 const handleConnection = async (socket) => {
     const token = socket.handshake.auth.token;
@@ -27,21 +37,26 @@ const handleConnection = async (socket) => {
 
     const userId = session.userId.toString();
 
-    // 🧠 Store user socket
     activeUsers.set(userId, socket.id);
-
     console.log(`✅ Socket authenticated: ${socket.id} (user: ${userId})`);
+
     socket.emit('authorized', 'Connection established');
 
-    // 🧹 Handle disconnect
+    // 🔄 Broadcast after connection
+    await broadcastActiveUsers();
+
     socket.on('disconnect', async () => {
         console.log(`⚠️ Disconnected: ${socket.id}`);
-        activeUsers.delete(userId); // clean up
+        activeUsers.delete(userId);
+
         try {
             await Session.findByIdAndUpdate(token, { lastUsedAt: new Date() });
         } catch (err) {
             console.error('Error updating lastUsedAt:', err.message);
         }
+
+        // 🔄 Broadcast after disconnection
+        await broadcastActiveUsers();
     });
 };
 

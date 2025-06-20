@@ -1,4 +1,4 @@
-// File: src/controllers/message.controller.js
+// File: controllers/message.controller.js
 
 import { createMessage, getMessagesBetween } from '../services/message.service.js';
 import { activeUsers } from '../sockets/handleConnection.js';

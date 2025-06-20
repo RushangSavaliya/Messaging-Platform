@@ -1,4 +1,4 @@
-// File: src/controllers/auth.controller.js
+// File: controllers/auth.controller.js
 
 import User from '../models/User.js';
 import { createSession, deleteSession } from '../services/session.service.js';
@@ -48,10 +48,15 @@ export const loginUser = async (req, res) => {
 // ────────────────────────────────
 export const logoutUser = async (req, res) => {
     try {
-        const session = await deleteSession(req.session._id); // ← Use session from middleware
+        if (!req.session?._id) {
+            return res.status(400).json({ error: 'Session is missing or invalid' });
+        }
+
+        const session = await deleteSession(req.session._id);
         if (!session) {
             return res.status(401).json({ error: 'Invalid session or already logged out' });
         }
+
         return res.status(200).json({ message: 'Logout successful' });
     } catch (error) {
         return res.status(500).json({ error: 'Logout failed: ' + error.message });

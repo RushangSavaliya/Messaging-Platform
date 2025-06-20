@@ -1,4 +1,4 @@
-// File: src/middlewares/requireAuth.middleware.js
+// File: middlewares/requireAuth.middleware.js
 
 import { findSessionById } from '../services/session.service.js';
 
