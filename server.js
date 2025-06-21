@@ -28,6 +28,11 @@ setupMiddlewares(app);
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 
+//  Health check route
+app.get('/api/health', (_req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
+
 // Start HTTP server
 const server = app.listen(PORT, () => {
   console.log(`🔥 Server is running at http://localhost:${PORT}`);
