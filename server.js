@@ -1,25 +1,18 @@
 // File: server.js
 
-import dotenv from 'dotenv';
 import express from 'express';
 
-import connectDB from './config/db.js';
+import { MONGO_URI, PORT, connectDB } from './config/envConfig.js';
 import setupMiddlewares from './middlewares/global.middleware.js';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import initSocket from './sockets/initSocket.js';
 
-// Load environment variables .env file
-dotenv.config();
-
-const PORT = process.env.PORT;
-const MONGO_URI = process.env.MONGO_URI;
+// Connect to MongoDB
+await connectDB(MONGO_URI);
 
 // Initialize Express app
 const app = express();
-
-// Connect to MongoDB
-await connectDB(MONGO_URI);
 
 // Setup global middlewares (JSON parsing, CORS, etc.)
 setupMiddlewares(app);
