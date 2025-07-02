@@ -7,6 +7,7 @@ import setupMiddlewares from './middlewares/global.middleware.js';
 import authRoutes from './routes/auth.route.js';
 import messageRoutes from './routes/message.route.js';
 import initSocket from './sockets/initSocket.js';
+import userRoutes from './routes/user.route.js';
 
 // Connect to MongoDB
 await connectDB(MONGO_URI);
@@ -20,6 +21,7 @@ setupMiddlewares(app);
 // Mount routes
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/users', userRoutes);
 
 //  Health check route
 app.get('/api/health', (_req, res) => {
