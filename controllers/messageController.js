@@ -6,7 +6,7 @@ import { activeUsers } from '../sockets/connectionHandler.js';
 // Send a new message
 export const sendMessage = async (req, res) => {
     try {
-        const senderId = req.session.userId.toString();
+        const senderId = req.userId;
         const { receiverId, content } = req.body;
 
         const message = await createMessage({ sender: senderId, receiver: receiverId, content });
@@ -26,7 +26,7 @@ export const sendMessage = async (req, res) => {
 // Get message history between two users
 export const getMessages = async (req, res) => {
     try {
-        const userA = req.session.userId.toString();
+        const userA = req.userId;
         const userB = req.params.ID;
 
         const history = await getMessagesBetween(userA, userB);

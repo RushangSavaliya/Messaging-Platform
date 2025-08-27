@@ -1,7 +1,7 @@
 // File: controllers/authController.js
 
 import User from '../models/User.js';
-import { createSession, deleteSession } from '../services/sessionService.js';
+import { generateToken } from '../utils/jwtUtils.js';
 
 // ────────────────────────────────
 // Register User
@@ -36,7 +36,7 @@ export const loginUser = async (req, res) => {
             return res.status(401).json({ error: 'Invalid credentials' });
         }
 
-        const token = await createSession(user._id);
+        const token = generateToken(user._id);
         return res.status(200).json({ message: 'Login successful', token });
     } catch (error) {
         return res.status(500).json({ error: 'Login failed: ' + error.message });
@@ -44,19 +44,12 @@ export const loginUser = async (req, res) => {
 };
 
 // ────────────────────────────────
-// Logout User (requiresAuth already runs before this)
+// Logout User
 // ────────────────────────────────
 export const logoutUser = async (req, res) => {
     try {
-        if (!req.session?._id) {
-            return res.status(400).json({ error: 'Session is missing or invalid' });
-        }
-
-        const session = await deleteSession(req.session._id);
-        if (!session) {
-            return res.status(401).json({ error: 'Invalid session or already logged out' });
-        }
-
+        // With JWT, logout is handled client-side by removing the token
+        // Optionally, you could implement a token blacklist here
         return res.status(200).json({ message: 'Logout successful' });
     } catch (error) {
         return res.status(500).json({ error: 'Logout failed: ' + error.message });
@@ -68,7 +61,7 @@ export const logoutUser = async (req, res) => {
 // ────────────────────────────────
 export const getCurrentUser = async (req, res) => {
     try {
-        const user = await User.findById(req.session.userId).select('_id username email');
+        const user = await User.findById(req.userId).select('_id username email');
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }

@@ -39,7 +39,7 @@ app.get('/api/health', (_req, res) => {
 // Create HTTP server
 const server = http.createServer(app);
 
-// Initialize Socket.IO
+// Initialize WebSocket server
 initSocket(server);
 
 // Start HTTP server

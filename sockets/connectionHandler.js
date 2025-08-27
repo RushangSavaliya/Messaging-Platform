@@ -1,8 +1,7 @@
 // File: sockets/connectionHandler.js
 
-import Session from '../models/Session.js';
 import User from '../models/User.js';
-import { findSessionById } from '../services/sessionService.js';
+import { verifyToken } from '../utils/jwtUtils.js';
 
 // 🔗 Global in-memory map: userId → ws
 export const activeUsers = new Map();
@@ -30,15 +29,15 @@ const handleConnection = async (ws, req) => {
         return;
     }
 
-    const session = await findSessionById(token);
+    const payload = verifyToken(token);
 
-    if (!session) {
-        ws.send(JSON.stringify({ event: 'unauthorized', data: 'Invalid session' }));
+    if (!payload) {
+        ws.send(JSON.stringify({ event: 'unauthorized', data: 'Invalid or expired token' }));
         ws.close();
         return;
     }
 
-    const userId = session.userId.toString();
+    const userId = payload.userId;
 
     activeUsers.set(userId, ws);
 
@@ -58,11 +57,7 @@ const handleConnection = async (ws, req) => {
     ws.on('close', async () => {
         activeUsers.delete(userId);
 
-        try {
-            await Session.findByIdAndUpdate(token, { lastUsedAt: new Date() });
-        } catch (err) {
-            console.error('Error updating lastUsedAt:', err.message);
-        }
+        // With JWT, no need to update session as tokens are stateless
 
         // Notify others this user is offline
         for (const [otherId, otherWs] of activeUsers.entries()) {

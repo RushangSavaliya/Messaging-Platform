@@ -1,6 +1,6 @@
 // File: middlewares/requireAuthMiddleware.js
 
-import { findSessionById } from '../services/sessionService.js';
+import { verifyToken } from '../utils/jwtUtils.js';
 
 const requireAuth = async (req, res, next) => {
     try {
@@ -11,12 +11,12 @@ const requireAuth = async (req, res, next) => {
             return res.status(401).json({ error: 'Authorization token missing or malformed' });
         }
 
-        const session = await findSessionById(token);
-        if (!session) {
-            return res.status(401).json({ error: 'Invalid or expired session' });
+        const payload = verifyToken(token);
+        if (!payload) {
+            return res.status(401).json({ error: 'Invalid or expired token' });
         }
 
-        req.session = session;
+        req.userId = payload.userId;
         next();
     } catch (err) {
         return res.status(500).json({ error: 'Internal server error' });
