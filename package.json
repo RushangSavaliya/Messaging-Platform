@@ -1,21 +1,22 @@
 {
-  "name": "messaging-platform",
-  "version": "1.0.0",
-  "description": "Backend for real-time messaging and user management",
-  "main": "server.js",
-  "type": "module",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
-    "mongoose": "^8.15.1",
-    "socket.io": "^4.8.1"
-  },
-  "devDependencies": {
-    "nodemon": "^3.1.10"
-  }
+    "name": "messaging-platform",
+    "version": "1.0.0",
+    "description": "Backend for real-time messaging and user management",
+    "main": "app.js",
+    "type": "module",
+    "scripts": {
+        "start": "node app.js",
+        "dev": "nodemon app.js"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "dotenv": "^16.5.0",
+        "express": "^5.1.0",
+        "mongoose": "^8.15.1",
+        "socket.io": "^4.8.1",
+        "ws": "^8.18.3"
+    },
+    "devDependencies": {
+        "nodemon": "^3.1.10"
+    }
 }

@@ -1,4 +1,4 @@
-// File: middlewares/validateMessage.middleware.js
+// File: middlewares/validateMessageMiddleware.js
 
 import mongoose from 'mongoose';
 

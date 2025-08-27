@@ -1,4 +1,4 @@
-// File: services/session.service.js
+// File: services/sessionService.js
 
 import Session from '../models/Session.js';
 

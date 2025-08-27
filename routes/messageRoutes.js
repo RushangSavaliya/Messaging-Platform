@@ -1,9 +1,9 @@
-// File: routes/message.route.js
+// File: routes/messageRoutes.js
 
 import express from 'express';
-import { getMessages, sendMessage } from '../controllers/message.controller.js';
-import requireAuth from '../middlewares/requireAuth.middleware.js';
-import { validateMessage } from '../middlewares/validateMessage.middleware.js';
+import { getMessages, sendMessage } from '../controllers/messageController.js';
+import requireAuth from '../middlewares/requireAuthMiddleware.js';
+import { validateMessage } from '../middlewares/validateMessageMiddleware.js';
 
 const router = express.Router();
 

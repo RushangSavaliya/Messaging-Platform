@@ -1,6 +1,6 @@
-// File: middlewares/requireAuth.middleware.js
+// File: middlewares/requireAuthMiddleware.js
 
-import { findSessionById } from '../services/session.service.js';
+import { findSessionById } from '../services/sessionService.js';
 
 const requireAuth = async (req, res, next) => {
     try {

@@ -1,4 +1,4 @@
-// File: middlewares/validateAuth.middleware.js
+// File: middlewares/validateAuthMiddleware.js
 
 // Username validation regex: lowercase letters, numbers, dots, underscores
 const USERNAME_REGEX = /^[a-z0-9._]+$/;

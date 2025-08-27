@@ -1,4 +1,4 @@
-// File: services/message.service.js
+// File: services/messageService.js
 
 import Message from '../models/Message.js';
 

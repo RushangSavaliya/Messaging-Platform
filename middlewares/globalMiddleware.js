@@ -1,4 +1,4 @@
-// File: middlewares/global.middleware.js
+// File: middlewares/globalMiddleware.js
 
 import cors from 'cors';
 import express from 'express';

@@ -1,4 +1,4 @@
-// File: routes/auth.route.js
+// File: routes/authRoutes.js
 
 import express from 'express';
 
@@ -8,14 +8,14 @@ import {
     loginUser,
     logoutUser,
     registerUser
-} from '../controllers/auth.controller.js';
+} from '../controllers/authController.js';
 
 // Middlewares
-import requireAuth from '../middlewares/requireAuth.middleware.js';
+import requireAuth from '../middlewares/requireAuthMiddleware.js';
 import {
     validateLogin,
     validateRegister
-} from '../middlewares/validateAuth.middleware.js';
+} from '../middlewares/validateAuthMiddleware.js';
 
 const router = express.Router();
 

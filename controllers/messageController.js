@@ -1,8 +1,7 @@
-// File: controllers/message.controller.js
+// File: controllers/messageController.js
 
-import { createMessage, getMessagesBetween } from '../services/message.service.js';
-import { activeUsers } from '../sockets/handleConnection.js';
-import { getIO } from '../sockets/initSocket.js';
+import { createMessage, getMessagesBetween } from '../services/messageService.js';
+import { activeUsers } from '../sockets/connectionHandler.js';
 
 // Send a new message
 export const sendMessage = async (req, res) => {
@@ -12,11 +11,10 @@ export const sendMessage = async (req, res) => {
 
         const message = await createMessage({ sender: senderId, receiver: receiverId, content });
 
-        // 🔥 Emit real-time message to receiver
-        const io = getIO();
-        const receiverSocketId = activeUsers.get(receiverId);
-        if (receiverSocketId) {
-            io.to(receiverSocketId).emit('newMessage', message);
+        // 🔥 Send real-time message to receiver using ws
+        const receiverSocket = activeUsers.get(receiverId);
+        if (receiverSocket && receiverSocket.readyState === receiverSocket.OPEN) {
+            receiverSocket.send(JSON.stringify({ event: 'newMessage', data: message }));
         }
 
         res.status(201).json({ message, status: 'sent' });

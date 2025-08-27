@@ -1,7 +1,7 @@
-// File: controllers/auth.controller.js
+// File: controllers/authController.js
 
 import User from '../models/User.js';
-import { createSession, deleteSession } from '../services/session.service.js';
+import { createSession, deleteSession } from '../services/sessionService.js';
 
 // ────────────────────────────────
 // Register User
